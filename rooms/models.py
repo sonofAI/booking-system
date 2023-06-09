@@ -10,7 +10,7 @@ class Room(models.Model):
     )
 
     name = models.CharField(max_length=255)
-    room_type = models.CharField(max_length=100)
+    room_type = models.CharField(max_length=100, choices=ROOM_TYPES)
     capacity = models.IntegerField()
     
     def __str__(self):
