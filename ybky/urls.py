@@ -16,14 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rooms.views import RoomBookingList, BookingCreateView, RoomViewSet
 
-from .routers import DefaultRouter
-from rooms.urls import router as room_router
-
-router = DefaultRouter()
-router.extend(room_router)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/rooms/<int:room_id>/bookings/', RoomBookingList.as_view(), name='room-booking-list'),
+    path('api/rooms/<int:room_id>/book/', BookingCreateView.as_view(), name='book-room'),
+    path('api/rooms/', RoomViewSet.as_view({'get': 'list'}), name='rooms'),
+    # path('api/rooms/<int:room_id>/', )
 ]
