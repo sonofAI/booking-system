@@ -24,5 +24,5 @@ urlpatterns = [
     path('api/rooms/<int:room_id>/bookings/', RoomBookingList.as_view(), name='room-booking-list'),
     path('api/rooms/<int:room_id>/book/', BookingCreateView.as_view(), name='book-room'),
     path('api/rooms/', RoomViewSet.as_view({'get': 'list'}), name='rooms'),
-    # path('api/rooms/<int:room_id>/', )
+    path('api/rooms/<int:pk>/', RoomViewSet.as_view({'get': 'retrieve'}), name='room_info'),
 ]
