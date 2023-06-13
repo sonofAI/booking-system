@@ -29,8 +29,8 @@ class RoomBookingList(generics.ListAPIView):
         times = []
         for booking in bookings:
             times.append({
-                'start': booking.start.strftime('%Y-%m-%d %H:%M:%S.%fZ'),
-                'end': booking.end.strftime('%Y-%m-%d %H:%M:%S.%fZ')
+                'start': booking.start.strftime('%Y-%m-%d %H:%M:%S'),
+                'end': booking.end.strftime('%Y-%m-%d %H:%M:%S')
             })
 
         return Response(times)
@@ -38,7 +38,13 @@ class RoomBookingList(generics.ListAPIView):
 
 class BookingCreateView(APIView):
     def valid_time(self, room_id, start, end):
-        current_time = datetime.now()
+        time_format = '%Y-%m-%d %H:%M:%S'
+
+        current_time = str(datetime.now())[:-7]
+        current_time = datetime.strptime(current_time, time_format)
+
+        start = datetime.strptime(start, time_format)
+        end = datetime.strptime(end, time_format)
 
         conflicting_bookings = Booking.objects.filter(
             room_id=room_id,
