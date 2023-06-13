@@ -48,8 +48,9 @@ class BookingCreateView(APIView):
 
         conflicting_bookings = Booking.objects.filter(
             room_id=room_id,
+            start__lt=end,
             end__gt=start,
-        ).filter(room_id=room_id, start__lt=end)
+        )
         if conflicting_bookings.exists():
             return False
 
