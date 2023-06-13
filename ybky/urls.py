@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rooms.views import RoomBookingList, BookingCreateView, RoomViewSet
+from rooms.views import RoomBookingList, BookingCreateView, RoomViewSet, RoomAvailabilityView
 
 
 urlpatterns = [
@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/rooms/<int:room_id>/bookings/', RoomBookingList.as_view(), name='room-booking-list'),
     path('api/rooms/<int:room_id>/book/', BookingCreateView.as_view(), name='book-room'),
     path('api/rooms/', RoomViewSet.as_view({'get': 'list'}), name='rooms'),
-    path('api/rooms/<int:pk>/', RoomViewSet.as_view({'get': 'retrieve'}), name='room_info'),
+    path('api/rooms/<int:pk>/', RoomViewSet.as_view({'get': 'retrieve'}), name='room-info'),
+    path('api/rooms/<int:room_id>/availability/', RoomAvailabilityView.as_view(), name='room-availability')
 ]

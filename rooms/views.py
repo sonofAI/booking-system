@@ -24,7 +24,7 @@ class RoomBookingList(generics.ListAPIView):
         room = Room.objects.filter(id=room_id)
 
         self.queryset = room
-        bookings = Booking.objects.filter(room=room[0])
+        bookings = Booking.objects.filter(room=room[0]).order_by('start')
 
         times = []
         for booking in bookings:
@@ -90,3 +90,37 @@ class BookingCreateView(APIView):
                 {'error': 'uzr, siz tanlagan vaqtda xona band'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class RoomAvailabilityView(generics.ListAPIView):
+    serializer_class = BookingSerializer
+
+    def list(self, request, *args, **kwargs):
+        room_id = self.kwargs['room_id']
+        room = Room.objects.filter(id=room_id)
+
+        self.queryset = room
+        bookings = Booking.objects.filter(room=room[0]).order_by('start')
+
+        booked_times = []
+        for booking in bookings:
+            booked_times.append({
+                'start': booking.start.strftime('%Y-%m-%d %H:%M:%S'),
+                'end': booking.end.strftime('%Y-%m-%d %H:%M:%S')
+            })
+        
+        free_times = []
+        length = len(booked_times)
+        for i in range(length):
+            if i != length - 1:
+                free_times.append({
+                    'start': booked_times[i]['end'],
+                    'end': booked_times[i+1]['start']
+                })
+            else:
+                free_times.append({
+                    'start': booked_times[i]['end'],
+                    'end': booked_times[i]['end'][:-9] + ' 23:59:59'
+                })
+        
+        return Response(free_times)
